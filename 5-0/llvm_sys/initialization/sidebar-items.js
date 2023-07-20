@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["LLVMInitializeAnalysis","LLVMInitializeCodeGen","LLVMInitializeCore","LLVMInitializeIPA","LLVMInitializeIPO","LLVMInitializeInstCombine","LLVMInitializeInstrumentation","LLVMInitializeObjCARCOpts","LLVMInitializeScalarOpts","LLVMInitializeTarget","LLVMInitializeTransformUtils","LLVMInitializeVectorization"]};
