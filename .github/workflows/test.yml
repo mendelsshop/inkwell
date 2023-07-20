@@ -79,7 +79,7 @@ jobs:
     needs: doc
     steps:
     - name: Doc Index Page Redirection
-      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/${{env.DOC_LLVM_FEATURE}}/index.html">' > ${{ env.DOC_PATH }}/index.html
+      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/index.html">' > ${{ env.DOC_PATH }}/${{env.DOC_LLVM_FEATURE}}/index.html
     - name: deploy!
       uses: peaceiris/actions-gh-pages@v3
       with:
