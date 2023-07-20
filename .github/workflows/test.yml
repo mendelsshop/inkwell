@@ -4,16 +4,13 @@ on: [push, pull_request,  workflow_dispatch]
 
 env:
   CARGO_TERM_COLOR: always
-  # set which version it should redirect to by default
-  DOC_LLVM_FEATURE: llvm15-0
-  # DOC_LLVM_VERSION: '16.0'
-  DOC_PATH: target/doc
 
 jobs:
   tests:
     name: "LLVM ${{ matrix.llvm-version[0] }}: ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-20.04]
         llvm-version:
@@ -45,21 +42,22 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         llvm-version:
-          # - ["4.0", "4-0"]
-          # - ["5.0", "5-0"]
-          # - ["6.0", "6-0"]
-          # - ["7.0", "7-0"]
-          # - ["8.0", "8-0"]
-          # - ["9.0", "9-0"]
-          # - ["10.0", "10-0"]
-          # - ["11.0", "11-0"]
-          # - ["12.0", "12-0"]
-          # - ["13.0", "13-0"]
+          - ["4.0", "4-0"]
+          - ["5.0", "5-0"]
+          - ["6.0", "6-0"]
+          - ["7.0", "7-0"]
+          - ["8.0", "8-0"]
+          - ["9.0", "9-0"]
+          - ["10.0", "10-0"]
+          - ["11.0", "11-0"]
+          - ["12.0", "12-0"]
+          - ["13.0", "13-0"]
           - ["14.0", "14-0"]
           - ["15.0", "15-0"]
-          # - ["16.0", "16-0"]
+          - ["16.0", "16-0"]
     # needs: tests
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
@@ -87,6 +85,7 @@ jobs:
         git pull
         git add .
         git commit -m "generated"
+        git pull
         git push
 
       
