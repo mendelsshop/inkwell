@@ -76,6 +76,7 @@ jobs:
   Deploy-Documentation:
     name: "Deploy-Documentation"
     runs-on: ubuntu-latest
+    needs: doc
     steps:
     - name: Doc Index Page Redirection
       run: echo '<meta http-equiv="refresh" content="1; url=inkwell/${{env.DOC_LLVM_FEATURE}}/index.html">' > ${{ env.DOC_PATH }}/index.html
