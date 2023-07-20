@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"attr":["llvm_enum","llvm_versioned_item","llvm_versions"]};

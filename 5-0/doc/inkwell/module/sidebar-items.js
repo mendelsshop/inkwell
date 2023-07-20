@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["Linkage"],"struct":["FunctionIterator","GlobalIterator","Module"]};

@@ -1,1 +1,0 @@
-window.ALL_CRATES = ["cfg_if","either","inkwell","inkwell_internals","libc","llvm_sys","lock_api","once_cell","parking_lot","parking_lot_core","proc_macro2","quote","scopeguard","smallvec","syn","unicode_ident"];

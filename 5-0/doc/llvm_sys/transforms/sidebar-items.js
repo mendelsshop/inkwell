@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"mod":["ipo","pass_manager_builder","scalar","vectorize"]};

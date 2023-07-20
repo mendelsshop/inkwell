@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["install_fatal_error_handler","reset_fatal_error_handler"]};

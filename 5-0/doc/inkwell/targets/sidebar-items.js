@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["ByteOrdering","CodeModel","FileType","RelocMode"],"struct":["InitializationConfig","Target","TargetData","TargetMachine","TargetTriple"]};

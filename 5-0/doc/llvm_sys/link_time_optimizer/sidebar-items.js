@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"enum":["llvm_lto_status_t"],"fn":["llvm_create_optimizer","llvm_destroy_optimizer","llvm_optimize_modules","llvm_read_object_file"],"type":["llvm_lto_t"]};
