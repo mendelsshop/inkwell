@@ -77,15 +77,15 @@ jobs:
         rustup toolchain install nightly
     - name: Build Documentation
       run: cargo +nightly doc --features llvm${{ matrix.llvm-version[1] }},nightly --verbose --target-dir  ${{ matrix.llvm-version[1]}}/
-    # - uses: actions/cache@v3
-    #   with:
-    #     path: /tmp/doc/${{ matrix.llvm-version[1]}}/  # Note that this path is not influenced by working-directory set in defaults, for example
-    #     key: the-key
-
     - name: add_docs
       run: |
         cp -r ${{ matrix.llvm-version[1]}}/ docs/${{ matrix.llvm-version[1]}}/
+        cd docs
         ls
-    
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add .
+        git commit -m "generated"
+        git push
 
       
