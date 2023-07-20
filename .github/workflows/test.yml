@@ -72,11 +72,16 @@ jobs:
       run: rustup toolchain install nightly
     - name: Build Documentation
       run: cargo +nightly doc --features llvm${{ matrix.llvm-version[1] }},nightly --verbose --target-dir ${{ env.DOC_PATH }}/${{ matrix.llvm-version[1]}}/
+
+  Deploy-Documentation:
+    name: "Deploy-Documentation"
+    runs-on: ubuntu-latest
+    steps:
     - name: Doc Index Page Redirection
-      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/${{matrix.llvm-version[1]}}/index.html">' > ${{ env.DOC_PATH }}/index.html
-    - name: Deploy Documentation
+      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/${{env.DOC_LLVM_FEATURE}}/index.html">' > ${{ env.DOC_PATH }}/index.html
+    - name: deploy!
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: "${{ env.DOC_PATH }}/${{ matrix.llvm-version[1]}}/"
+        publish_dir: "${{ env.DOC_PATH }}/"
         force_orphan: true
