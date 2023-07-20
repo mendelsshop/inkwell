@@ -75,28 +75,14 @@ jobs:
     #   with:
     #     path: /tmp/doc/${{ matrix.llvm-version[1]}}/  # Note that this path is not influenced by working-directory set in defaults, for example
     #     key: the-key
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
+    - uses: actions/checkout@v3
       with:
-        name: ${{ matrix.llvm-version[1]}}
-        path: ${{ matrix.llvm-version[1]}}/*
-        retention-days: 1
+        ref: gh-pages
+        path: docs
+    - name: add_docs
+      run: |
+        cp ${{ matrix.llvm-version[1]}}/ docs/${{ matrix.llvm-version[1]}}/
+        ls
+    
 
-  Deploy-Documentation:
-    name: "Deploy-Documentation"
-    runs-on: ubuntu-latest
-    needs: doc
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        path: doc
-    - name: Print ls for debugging
-      run: ls -lah /tmp/doc
-    - name: Doc Index Page Redirection
-      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/index.html">' > doc${{env.DOC_LLVM_FEATURE}}/index.html
-    - name: deploy!
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: /tmp/doc
-        force_orphan: true
+      
