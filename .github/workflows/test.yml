@@ -5,7 +5,7 @@ on: [push, pull_request,  workflow_dispatch]
 env:
   CARGO_TERM_COLOR: always
   # set which version it should redirect to by default
-  DOC_LLVM_FEATURE: llvm16-0
+  DOC_LLVM_FEATURE: llvm15-0
   # DOC_LLVM_VERSION: '16.0'
   DOC_PATH: target/doc
 
