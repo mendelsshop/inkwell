@@ -4,7 +4,8 @@ on: [push, pull_request]
 
 env:
   CARGO_TERM_COLOR: always
-  # DOC_LLVM_FEATURE: llvm16-0
+  # set which version it should redirect to by default
+  DOC_LLVM_FEATURE: llvm16-0
   # DOC_LLVM_VERSION: '16.0'
   DOC_PATH: target/doc
 
@@ -72,7 +73,7 @@ jobs:
     - name: Build Documentation
       run: cargo +nightly doc --features llvm${{ matrix.llvm-version[1] }},nightly --verbose
     - name: Doc Index Page Redirection
-      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/index.html">' > ${{ env.DOC_PATH }}/${{matrix.llvm-version[1]}}/index.html
+      run: echo '<meta http-equiv="refresh" content="1; url=inkwell/${{matrix.llvm-version[1]}}/index.html">' > ${{ env.DOC_PATH }}/index.html
     - name: Deploy Documentation
       uses: peaceiris/actions-gh-pages@v3
       with:
