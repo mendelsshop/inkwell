@@ -58,7 +58,8 @@ jobs:
           - ["14.0", "14-0"]
           - ["15.0", "15-0"]
           - ["16.0", "16-0"]
-    needs: tests
+    # commenting this out b/c if a tests fail on any version docs don't get generated (and right now 16-0 always fails).
+    # needs: tests
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
     - uses: actions/checkout@v3
