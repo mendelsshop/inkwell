@@ -75,7 +75,7 @@ jobs:
         ls
         rustup toolchain install nightly
     - name: Build Documentation
-      run: cargo +nightly doc --features llvm${{ matrix.llvm-version[1] }},nightly --verbose --target-dir  ${{ matrix.llvm-version[1]}}/
+      run: cargo +nightly doc --features llvm${{ matrix.llvm-version[1] }},nightly --verbose --target-dir  ${{ matrix.llvm-version[1]}}/ --no-deps
     - name: add_docs
       run: |
         cp -r ${{ matrix.llvm-version[1]}}/doc docs/${{ matrix.llvm-version[1]}}/
