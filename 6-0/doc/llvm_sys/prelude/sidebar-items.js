@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"type":["LLVMAttributeRef","LLVMBasicBlockRef","LLVMBool","LLVMBuilderRef","LLVMContextRef","LLVMDIBuilderRef","LLVMDiagnosticInfoRef","LLVMMemoryBufferRef","LLVMMetadataRef","LLVMModuleProviderRef","LLVMModuleRef","LLVMPassManagerRef","LLVMPassRegistryRef","LLVMTypeRef","LLVMUseRef","LLVMValueRef"]};
