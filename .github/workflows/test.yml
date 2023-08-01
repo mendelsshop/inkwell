@@ -39,8 +39,8 @@ jobs:
       - name: Run tests
         run: cargo test --release --features llvm${{ matrix.llvm-version[1] }} --verbose
   doc:
+    runs-on: ${{ matrix.os }}
     name: Documentation
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -58,6 +58,11 @@ jobs:
           - ["14.0", "14-0"]
           - ["15.0", "15-0"]
           - ["16.0", "16-0"]
+                  # only use ubuntu-22.04 for llvm 16 and higher
+        include:
+          - os: ubuntu-20.04
+          - os: ubuntu-22.04
+            llvm-version: ["16.0", "16-0"]
     # commenting this out b/c if a tests fail on any version docs don't get generated (and right now 16-0 always fails).
     # needs: tests
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
