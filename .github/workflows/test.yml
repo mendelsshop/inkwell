@@ -95,7 +95,7 @@ jobs:
         git config user.name github-actions
         git config user.email github-actions@github.com
         git add .
-        git commit  --allow-empty -m "generated docs for ${{ matrix.llvm-version[1]}}"
+        git commit -m "generated docs for ${{ matrix.llvm-version[1]}}"
         git pull --rebase
         git push
 
