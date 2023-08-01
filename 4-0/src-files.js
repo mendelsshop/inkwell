@@ -1,0 +1,4 @@
+var srcIndex = JSON.parse('{\
+"inkwell":["",[["support",[],["error_handling.rs","mod.rs"]],["types",[],["array_type.rs","enums.rs","float_type.rs","fn_type.rs","int_type.rs","metadata_type.rs","mod.rs","ptr_type.rs","struct_type.rs","traits.rs","vec_type.rs","void_type.rs"]],["values",[],["array_value.rs","basic_value_use.rs","call_site_value.rs","callable_value.rs","enums.rs","float_value.rs","fn_value.rs","generic_value.rs","global_value.rs","instruction_value.rs","int_value.rs","metadata_value.rs","mod.rs","phi_value.rs","ptr_value.rs","struct_value.rs","traits.rs","vec_value.rs"]]],["attributes.rs","basic_block.rs","builder.rs","context.rs","data_layout.rs","execution_engine.rs","intrinsics.rs","lib.rs","memory_buffer.rs","module.rs","object_file.rs","passes.rs","targets.rs"]]\
+}');
+createSrcSidebar();
