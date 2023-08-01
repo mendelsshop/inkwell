@@ -73,6 +73,9 @@ jobs:
     # needs: tests
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
+      # both " - uses: actions/checkout@v3" are needed
+      # one is for master and one is gh-pages
+    - uses: actions/checkout@v3
     - uses: actions/checkout@v3
       with:
         ref: gh-pages
