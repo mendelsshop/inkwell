@@ -88,7 +88,7 @@ impl<'ctx> IntType<'ctx> {
         }
     }
 
-    /// Creates an `IntValue` repesenting a constant value of this `IntType`. It will be automatically assigned this `IntType`'s `Context`.
+    /// Creates an `IntValue` representing a constant value of this `IntType`. It will be automatically assigned this `IntType`'s `Context`.
     ///
     /// # Example
     /// ```no_run
@@ -364,6 +364,25 @@ impl<'ctx> IntType<'ctx> {
     /// ```
     pub fn get_undef(self) -> IntValue<'ctx> {
         unsafe { IntValue::new(self.int_type.get_undef()) }
+    }
+
+    /// Creates a poison instance of an `IntType`.
+    ///
+    /// # Example
+    /// ```no_run
+    /// use inkwell::context::Context;
+    /// use inkwell::AddressSpace;
+    /// use inkwell::values::AnyValue;
+    ///
+    /// let context = Context::create();
+    /// let i8_type = context.i8_type();
+    /// let i8_poison = i8_type.get_poison();
+    ///
+    /// assert!(i8_poison.is_poison());
+    /// ```
+    #[llvm_versions(12.0..=latest)]
+    pub fn get_poison(self) -> IntValue<'ctx> {
+        unsafe { IntValue::new(self.int_type.get_poison()) }
     }
 
     /// Creates a `GenericValue` for use with `ExecutionEngine`s.

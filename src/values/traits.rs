@@ -1,5 +1,8 @@
 use llvm_sys::prelude::LLVMValueRef;
 
+#[llvm_versions(12.0..=latest)]
+use llvm_sys::core::LLVMIsPoison;
+
 use std::fmt::Debug;
 
 use crate::support::LLVMString;
@@ -91,7 +94,7 @@ pub unsafe trait BasicValue<'ctx>: AnyValue<'ctx> {
     }
 
     /// Most `BasicValue`s are the byproduct of an instruction
-    /// and so are convertable into an `InstructionValue`
+    /// and so are convertible into an `InstructionValue`
     fn as_instruction_value(&self) -> Option<InstructionValue<'ctx>> {
         let value = unsafe { Value::new(self.as_value_ref()) };
 
@@ -143,6 +146,12 @@ pub unsafe trait AnyValue<'ctx>: AsValueRef + Debug {
     /// Prints a value to a `LLVMString`
     fn print_to_string(&self) -> LLVMString {
         unsafe { Value::new(self.as_value_ref()).print_to_string() }
+    }
+
+    /// Returns whether the value is `poison`
+    #[llvm_versions(12.0..=latest)]
+    fn is_poison(&self) -> bool {
+        unsafe { LLVMIsPoison(self.as_value_ref()) == 1 }
     }
 }
 

@@ -38,7 +38,11 @@ fn test_call_site() {
     let fn_type = void_type.fn_type(&[], false);
 
     let function = module.add_function("do_nothing", fn_type, None);
-    let call_site = builder.build_call(function, &[], "to_infinity_and_beyond");
+
+    let block = context.append_basic_block(function, "entry");
+    builder.position_at_end(block);
+
+    let call_site = builder.build_call(function, &[], "to_infinity_and_beyond").unwrap();
 
     assert_eq!(call_site.count_arguments(), 0);
     assert!(!call_site.is_tail_call());
@@ -171,7 +175,7 @@ fn test_set_get_name() {
     let array_param = function.get_nth_param(3).unwrap().into_array_value();
     let ptr_param = function.get_nth_param(4).unwrap().into_pointer_value();
     let vec_param = function.get_nth_param(5).unwrap().into_vector_value();
-    let phi_val = builder.build_phi(bool_type, "phi_node");
+    let phi_val = builder.build_phi(bool_type, "phi_node").unwrap();
 
     assert_eq!(int_param.get_name().to_str(), Ok(""));
     assert_eq!(float_param.get_name().to_str(), Ok(""));
@@ -283,6 +287,90 @@ fn test_undef() {
     assert!(ppc_f128_undef.is_undef());
 }
 
+#[llvm_versions(12.0..=latest)]
+#[test]
+fn test_poison() {
+    let context = Context::create();
+    let bool_type = context.bool_type();
+    let i8_type = context.i8_type();
+    let i16_type = context.i16_type();
+    let i32_type = context.i32_type();
+    let i64_type = context.i64_type();
+    let i128_type = context.i128_type();
+    let f16_type = context.f16_type();
+    let f32_type = context.f32_type();
+    let f64_type = context.f64_type();
+    let f128_type = context.f128_type();
+    let array_type = f64_type.array_type(42);
+    let ppc_f128_type = context.ppc_f128_type();
+
+    assert_eq!(array_type.get_element_type().into_float_type(), f64_type);
+
+    let bool_val = bool_type.const_int(0, false);
+    let i8_val = i8_type.const_int(0, false);
+    let i16_val = i16_type.const_int(0, false);
+    let i32_val = i32_type.const_int(0, false);
+    let i64_val = i64_type.const_int(0, false);
+    let i128_val = i128_type.const_int(0, false);
+    let f16_val = f16_type.const_float(0.0);
+    let f32_val = f32_type.const_float(0.0);
+    let f64_val = f64_type.const_float(0.0);
+    let f128_val = f128_type.const_float(0.0);
+    let ptr_val = bool_type.ptr_type(AddressSpace::default()).const_null();
+    let array_val = f64_type.const_array(&[f64_val]);
+    let struct_val = context.const_struct(&[i8_val.into(), f128_val.into()], false);
+    let vec_val = VectorType::const_vector(&[i8_val]);
+    let ppc_f128_val = ppc_f128_type.const_float(0.0);
+
+    assert!(!bool_val.is_poison());
+    assert!(!i8_val.is_poison());
+    assert!(!i16_val.is_poison());
+    assert!(!i32_val.is_poison());
+    assert!(!i64_val.is_poison());
+    assert!(!i128_val.is_poison());
+    assert!(!f16_val.is_poison());
+    assert!(!f32_val.is_poison());
+    assert!(!f64_val.is_poison());
+    assert!(!f128_val.is_poison());
+    assert!(!ptr_val.is_poison());
+    assert!(!array_val.is_poison());
+    assert!(!struct_val.is_poison());
+    assert!(!vec_val.is_poison());
+    assert!(!ppc_f128_val.is_poison());
+
+    let bool_poison = bool_type.get_poison();
+    let i8_poison = i8_type.get_poison();
+    let i16_poison = i16_type.get_poison();
+    let i32_poison = i32_type.get_poison();
+    let i64_poison = i64_type.get_poison();
+    let i128_poison = i128_type.get_poison();
+    let f16_poison = f16_type.get_poison();
+    let f32_poison = f32_type.get_poison();
+    let f64_poison = f64_type.get_poison();
+    let f128_poison = f128_type.get_poison();
+    let ptr_poison = bool_type.ptr_type(AddressSpace::default()).get_poison();
+    let array_poison = array_type.get_poison();
+    let struct_poison = context.struct_type(&[bool_type.into()], false).get_poison();
+    let vec_poison = bool_type.vec_type(1).get_poison();
+    let ppc_f128_poison = ppc_f128_type.get_poison();
+
+    assert!(bool_poison.is_poison());
+    assert!(i8_poison.is_poison());
+    assert!(i16_poison.is_poison());
+    assert!(i32_poison.is_poison());
+    assert!(i64_poison.is_poison());
+    assert!(i128_poison.is_poison());
+    assert!(f16_poison.is_poison());
+    assert!(f32_poison.is_poison());
+    assert!(f64_poison.is_poison());
+    assert!(f128_poison.is_poison());
+    assert!(ptr_poison.is_poison());
+    assert!(array_poison.is_poison());
+    assert!(struct_poison.is_poison());
+    assert!(vec_poison.is_poison());
+    assert!(ppc_f128_poison.is_poison());
+}
+
 #[test]
 fn test_consecutive_fns() {
     let context = Context::create();
@@ -323,7 +411,7 @@ fn test_verify_fn() {
     let basic_block = context.append_basic_block(function, "entry");
 
     builder.position_at_end(basic_block);
-    builder.build_return(None);
+    builder.build_return(None).unwrap();
 
     assert!(function.verify(false));
 
@@ -495,7 +583,7 @@ fn test_metadata() {
 
         builder.position_at_end(entry_block);
 
-        let ret_instr = builder.build_return(None);
+        let ret_instr = builder.build_return(None).unwrap();
         let ret_instr_md = context.metadata_node(&[md_string.into()]);
 
         assert!(ret_instr.set_metadata(ret_instr_md, 2).is_ok());
@@ -882,7 +970,7 @@ fn test_phi_values() {
 
     let false_val = bool_type.const_int(0, false);
     let true_val = bool_type.const_int(1, false);
-    let phi = builder.build_phi(bool_type, "if");
+    let phi = builder.build_phi(bool_type, "if").unwrap();
 
     assert!(!phi.is_null());
     assert!(!phi.is_undef());
@@ -938,11 +1026,11 @@ fn test_allocations() {
     // methods on positioned variant if so. But leave positioning methods
     // on both?
 
-    let stack_ptr = builder.build_alloca(i32_type, "stack_ptr");
+    let stack_ptr = builder.build_alloca(i32_type, "stack_ptr").unwrap();
 
     assert_eq!(stack_ptr.get_type().print_to_string().to_str(), Ok(ptr_type));
 
-    let stack_array = builder.build_array_alloca(i32_type, i32_three, "stack_array");
+    let stack_array = builder.build_array_alloca(i32_type, i32_three, "stack_array").unwrap();
 
     assert_eq!(stack_array.get_type().print_to_string().to_str(), Ok(ptr_type));
 
@@ -1129,7 +1217,7 @@ fn test_function_value_to_global_to_pointer() {
     let bb = context.append_basic_block(fn_value, "entry");
 
     builder.position_at_end(bb);
-    builder.build_return(None);
+    builder.build_return(None).unwrap();
 
     assert!(!fn_global_value.is_declaration());
     assert_eq!(fn_global_value.get_dll_storage_class(), DLLStorageClass::Default);
@@ -1178,11 +1266,11 @@ fn test_non_fn_ptr_called() {
     {
         use inkwell::values::CallableValue;
         let callable_value = CallableValue::try_from(i8_ptr_param).unwrap();
-        builder.build_call(callable_value, &[], "call");
+        builder.build_call(callable_value, &[], "call").unwrap();
     }
     #[cfg(any(feature = "llvm15-0", feature = "llvm16-0"))]
     builder.build_indirect_call(i8_ptr_type.fn_type(&[], false), i8_ptr_param, &[], "call");
-    builder.build_return(None);
+    builder.build_return(None).unwrap();
 
     assert!(module.verify().is_ok());
 }
@@ -1202,11 +1290,15 @@ fn test_vectors() {
     let vector_param = fn_value.get_first_param().unwrap().into_vector_value();
 
     builder.position_at_end(bb);
-    builder.build_insert_element(vector_param, i32_seven, i32_zero, "insert");
+    builder
+        .build_insert_element(vector_param, i32_seven, i32_zero, "insert")
+        .unwrap();
 
-    let extracted = builder.build_extract_element(vector_param, i32_zero, "extract");
+    let extracted = builder
+        .build_extract_element(vector_param, i32_zero, "extract")
+        .unwrap();
 
-    builder.build_return(Some(&extracted));
+    builder.build_return(Some(&extracted)).unwrap();
 
     assert!(module.verify().is_ok());
 }
@@ -1241,10 +1333,12 @@ fn test_aggregate_returns() {
         feature = "llvm13-0",
         feature = "llvm14-0"
     ))]
-    builder.build_ptr_diff(ptr_param1, ptr_param2, "diff");
+    builder.build_ptr_diff(ptr_param1, ptr_param2, "diff").unwrap();
     #[cfg(any(feature = "llvm15-0", feature = "llvm16-0"))]
     builder.build_ptr_diff(i32_ptr_type, ptr_param1, ptr_param2, "diff");
-    builder.build_aggregate_return(&[i32_three.into(), i32_seven.into()]);
+    builder
+        .build_aggregate_return(&[i32_three.into(), i32_seven.into()])
+        .unwrap();
 
     assert!(module.verify().is_ok());
 }
@@ -1260,7 +1354,13 @@ fn test_constant_expression() {
     let fn_type = void_type.fn_type(&[], false);
 
     let function = module.add_function("", fn_type, None);
-    let expr = builder.build_ptr_to_int(function.as_global_value().as_pointer_value(), i32_type, "");
+
+    let block = context.append_basic_block(function, "entry");
+    builder.position_at_end(block);
+
+    let expr = builder
+        .build_ptr_to_int(function.as_global_value().as_pointer_value(), i32_type, "")
+        .unwrap();
 
     assert!(expr.is_const());
     assert!(!expr.is_constant_int());

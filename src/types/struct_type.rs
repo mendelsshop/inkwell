@@ -352,10 +352,31 @@ impl<'ctx> StructType<'ctx> {
         unsafe { StructValue::new(self.struct_type.get_undef()) }
     }
 
+    /// Creates a poison instance of a `StructType`.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use inkwell::context::Context;
+    /// use inkwell::values::AnyValue;
+    ///
+    /// let context = Context::create();
+    /// let f32_type = context.f32_type();
+    /// let i8_type = context.i8_type();
+    /// let struct_type = context.struct_type(&[f32_type.into(), i8_type.into()], false);
+    /// let struct_type_poison = struct_type.get_poison();
+    ///
+    /// assert!(struct_type_poison.is_poison());
+    /// ```
+    #[llvm_versions(12.0..=latest)]
+    pub fn get_poison(self) -> StructValue<'ctx> {
+        unsafe { StructValue::new(self.struct_type.get_poison()) }
+    }
+
     /// Defines the body of a `StructType`.
     ///
     /// If the struct is an opaque type, it will no longer be after this call.
-    /// 
+    ///
     /// Resetting the `packed` state of a non-opaque struct type may not work.
     ///
     /// # Example

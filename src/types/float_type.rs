@@ -82,7 +82,7 @@ impl<'ctx> FloatType<'ctx> {
         self.float_type.vec_type(size)
     }
 
-    /// Creates a `FloatValue` repesenting a constant value of this `FloatType`.
+    /// Creates a `FloatValue` representing a constant value of this `FloatType`.
     /// It will be automatically assigned this `FloatType`'s `Context`.
     ///
     /// # Example
@@ -253,6 +253,24 @@ impl<'ctx> FloatType<'ctx> {
     /// ```
     pub fn get_undef(&self) -> FloatValue<'ctx> {
         unsafe { FloatValue::new(self.float_type.get_undef()) }
+    }
+
+    /// Creates a poison instance of a `FloatType`.
+    ///
+    /// # Example
+    /// ```no_run
+    /// use inkwell::context::Context;
+    /// use inkwell::values::AnyValue;
+    ///
+    /// let context = Context::create();
+    /// let f32_type = context.f32_type();
+    /// let f32_poison = f32_type.get_poison();
+    ///
+    /// assert!(f32_poison.is_poison());
+    /// ```
+    #[llvm_versions(12.0..=latest)]
+    pub fn get_poison(&self) -> FloatValue<'ctx> {
+        unsafe { FloatValue::new(self.float_type.get_poison()) }
     }
 
     /// Creates a `GenericValue` for use with `ExecutionEngine`s.
